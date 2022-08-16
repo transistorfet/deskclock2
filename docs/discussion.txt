@@ -1,0 +1,39 @@
+
+2022-07-31:
+
+- the idea is to replace my existing deskclock with something smaller and more permenent
+- the main things I use from the existing one are the buttons, the LCD, and the temperature sensor (although it also has an IR
+  receiver and LEDs (which I've never used))
+- the existing one is a bit of a mess of wires, and with the new monitors being higher up, there's nothing to use to press against
+  when pressing the keys, so it's less convenient to press them.  An improvement would be mounting them on top, so that pressing
+  downwards could activate them, which wouldn't have the issue of pushing the whole thing backwards
+- the headers on the existing buttons board being on the top side mean they can't be easily mounted inside a case facing upwards
+- one thing that came up was the idea of having a digital pet (if the screen was capable of graphics).  Helena suggested Neko (code)
+  There are lots of clones of the Neko animation, so maybe I could port it.  Might require a beefier controller though...
+- STM32 boards seem to be pretty hard to come by because of the supply chain shortages.  There is a design online (no premade boards)
+  called the OtterPill which is pin compatible with the Arduino Nano, so *maybe* possible to upgrade?
+
+
+- possible improvements:
+	- a longer LCD screen for temp as well as date?
+	- maybe nicer buttons, possibly cherry mx switches?
+	- smaller and more compact, possible inside some kind of case
+	- maybe use a nano, with mini or microUSB to be less bulky??
+	- I could possibly use an STM32 with rust running on it, but that doesn't provide much benefit, and arduino is better supported
+	- looks like Adafruit has a 20x4 LCD RGB-on-black which would be a perfect upgrade to the existing one
+	- an alternative is the Adafruit 2.8 inch graphics display with capacitive touch (added interaction through touch)
+	- should you add a potentiometer input that could be repurposed for different things?  Either changing colour on RGB backlight, or headphone volume on computer?
+
+
+- might need more pins... the 20x4 LCD requires a minimum of 6 digital lines for control, plus 3 PWM lines for the RGB backlight, and then
+  you have 8 buttons on top of that, plus one for the temp sensor and one for the IR receiver.  You can multiplex the buttons using a
+  parallel to serial convertor, which would reduce that to 2 pins, making a total of 10 digital pins + 3 PWM (instead of 16 + 3).
+ 
+
+
+2022-08-14:
+
+- I've started to settle on a 2.8" LCD, 320x240, 8 cherry mx buttons, possibly in sockets, in a 4 x 2 configuration running on the
+  STM32F405 board, or possible the SAMD51 Feather, with other sensors and possible expansion with STEMMA/Qwiic
+- LCD mounting holes should be about 15mm above board (with metal brackets)
+
