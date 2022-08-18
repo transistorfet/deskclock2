@@ -13,18 +13,20 @@
   MIT license, all text above must be included in any redistribution
  ****************************************************/
 
+#include <DallasTemperature.h>
+#include <OneWire.h>
 
-#include "SPI.h"
-#include "Adafruit_GFX.h"
-#include "Adafruit_ILI9341.h"
+#include <SPI.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_ILI9341.h>
 
-#include "Adafruit_NeoKey_1x4.h"
-#include "seesaw_neopixel.h"
+#include <Adafruit_NeoKey_1x4.h>
+#include <seesaw_neopixel.h>
 
 
 
 #define FONT    OverpassMono14pt7b
-#include "Fonts/OverpassMono14pt7b.h"
+#include "OverpassMono14pt7b.h"
 #define TEXT_LINE_HEIGHT    20
 #define TEXT_MAX_HEIGHT     24
 
@@ -366,7 +368,25 @@ void process_buttons()
     }
 }
 
+/**********************
+ * Temperature Sensor *
+ **********************/
 
+OneWire oneWire(5);
+DallasTemperature sensors(&oneWire);
+
+void init_temperature()
+{
+	sensors.begin();
+}
+
+void send_temperature()
+{
+	sensors.requestTemperatures();
+	Serial.print("T0=");
+	Serial.print(sensors.getTempCByIndex(0), 4);
+	Serial.print('\n');
+}
 
 
 
@@ -387,6 +407,8 @@ void setup()
 
     neokey1.begin(0x30);
     neokey2.begin(0x31);
+
+    init_temperature();
 }
 
 unsigned long last_time = 0;
@@ -414,9 +436,9 @@ void loop()
     //    Serial.print('\n');
     //}
 
-    //if (millis() - last_time > 30000) {
-    //    last_time = millis();
-    //    send_temperature();
-    //}
+    if (millis() - last_time > 30000) {
+        last_time = millis();
+        send_temperature();
+    }
 }
 
