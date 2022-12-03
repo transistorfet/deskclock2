@@ -5,7 +5,7 @@
   (paper "A4")
 
   (title_block
-    (title "Deskclock2")
+    (title "DeskClock2")
     (rev "1")
   )
 
@@ -2548,8 +2548,8 @@
     (pin "27" (uuid 54e5b48e-23dc-4b20-9e5b-bb0ac00c1499))
     (pin "28" (uuid ece14df1-1ecf-49c7-bff4-e007c1da6a1a))
     (pin "3" (uuid 0512320f-26d6-423b-9a74-96664c104477))
-    (pin "4" (uuid 5aea6178-15a2-4a3a-8265-e7e8a5c3e718))
-    (pin "4" (uuid 5aea6178-15a2-4a3a-8265-e7e8a5c3e718))
+    (pin "4" (uuid 5aea6178-15a2-4a3a-8265-e7e8a5c3e719))
+    (pin "4" (uuid 5aea6178-15a2-4a3a-8265-e7e8a5c3e719))
     (pin "5" (uuid 8c85af18-e700-4a6d-9030-3efccef47efa))
     (pin "6" (uuid 916816eb-8d5e-48d5-9145-b992357edc19))
     (pin "7" (uuid 23a73d0a-2d71-48d1-a261-f4e9aeb8bbbb))

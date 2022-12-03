@@ -1,5 +1,5 @@
 
-Deskclock 2
+DeskClock 2
 ===========
 
 ###### *Started July 31, 2022*

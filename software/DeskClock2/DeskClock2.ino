@@ -24,7 +24,6 @@
 #include <seesaw_neopixel.h>
 
 
-
 #define FONT    OverpassMono14pt7b
 #include "OverpassMono14pt7b.h"
 #define TEXT_LINE_HEIGHT    20
