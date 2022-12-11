@@ -67,6 +67,7 @@ Programming with Arduino
 ------------------------
 
 In the Arduino IDE:
+
 - select board "Generic STM32F4 Series"
 - select board part number "Adafruit Feather STM32F405"
 - select USB support "CDC (generic 'Serial' supersede USART)
