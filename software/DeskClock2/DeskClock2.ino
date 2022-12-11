@@ -296,8 +296,6 @@ void process_msg()
 
 #define I2C_GPIO_ADDR    0x26
 
-//Adafruit_MCP23X08 buttons;
-
 #define NUM_BUTTONS    8
 unsigned long button_last = 0;
 unsigned int button_st[NUM_BUTTONS];
@@ -386,22 +384,6 @@ byte read_buttons()
     return ~buttons;
 }
 
-/*
-byte read_buttons()
-{
-    button_values = neokey1.read();
-
-    // Rotate the bits so the button order works with the current layout
-    byte output = 0;
-    byte input = neokey2.read();
-    for (byte i = 0; i < 4; i++) {
-        output |= input & 0x01;
-        input >>= 1;
-        output <<= 1;
-    }
-    button_values |= output << 3;
-}
-*/
 
 /**********************
  * Temperature Sensor *
