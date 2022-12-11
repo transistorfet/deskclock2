@@ -4,3 +4,8 @@ Revision 1 Errata and Notes
 
 - the IR receiver pinout has the power pins backwards, which causes the sensor to heat up and die
 
+- the silkscreen button labels are the opposite order to what the button numbers are in firmware,
+  where the computer side matches the firmware.  The "Next" button is B7 in software, but SW1 on
+  the silkscreen.  I'm pretty sure the software ordering has carried on since the original
+  deskclock
+
