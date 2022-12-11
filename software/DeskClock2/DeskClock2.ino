@@ -1,20 +1,11 @@
-/***************************************************
-  This is our GFX example for the Adafruit ILI9341 Breakout and Shield
-  ----> http://www.adafruit.com/products/1651
-
-  Check out the links above for our tutorials and wiring diagrams
-  These displays use SPI to communicate, 4 or 5 pins are required to
-  interface (RST is optional)
-  Adafruit invests time and resources providing this open source code,
-  please support Adafruit and open-source hardware by purchasing
-  products from Adafruit!
-
-  Written by Limor Fried/Ladyada for Adafruit Industries.
-  MIT license, all text above must be included in any redistribution
- ****************************************************/
+/**
+ * DeskClock2 - A Desktop Companion Device
+ */
 
 #include <DallasTemperature.h>
 #include <OneWire.h>
+
+#include <IRremote.h>
 
 #include <SPI.h>
 #include <Adafruit_GFX.h>
@@ -38,19 +29,14 @@
 // For the Adafruit shield, these are the default.
 #define TFT_DC      9
 #define TFT_CS      10
-
 //#define TFT_RST     5
 //#define TFT_CLK     6
 //#define TFT_MOSI    11
 //#define TFT_MISO    12
 
-// Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
-// If using the breakout, change pins as desired
-//Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
 
 const GFXfont *font = &FONT;
-
 
 
 #define RGB(r, g, b)    ((r) << 11) | ((g) << 5) | (b)
@@ -117,7 +103,6 @@ void clear_serial()
 }
 
 
-
 void process_msg()
 {
     int val;
@@ -154,141 +139,8 @@ void process_msg()
         }
     }
     clear_serial();
-
-/*
-    int val;
-
-    if (!serial_avail)
-        return;
-    serial_rb[serial_r] = '\0';
-
-    if (serial_rb[0] == 'L') {
-        if (serial_rb[1] == '=') {
-            tft.setCursor(0, 1.5 * TEXT_LINE_HEIGHT);
-            tft.fillRect(0, tft.getCursorY() - TEXT_LINE_HEIGHT, SCREEN_WIDTH, TEXT_LINE_HEIGHT + 7, BLACK);
-
-            char *start = &serial_rb[2];
-            for (int i = 2; serial_rb[i] != '\0'; i++) {
-                if (serial_rb[i] == '\r' || serial_rb[i] == '\n') {
-                    serial_rb[i] = '\0';
-                    tft.println(start);
-                    start = &serial_rb[i + 1];
-                    tft.fillRect(0, tft.getCursorY() - TEXT_LINE_HEIGHT, SCREEN_WIDTH, TEXT_LINE_HEIGHT + 7, BLACK);
-                } else if (serial_rb[i] == '\x1b' && serial_rb[i + 1] == '[') {
-                    serial_rb[i] = '\0';
-                    tft.print(start);
-                    start = &serial_rb[i + 4];
-
-                    byte type;
-                    i += 2;
-
-                    val = serial_rb[i] - '0';
-                    type = serial_rb[++i];
-                    tft.setTextColor(colours[val]);
-                }
-            }
-        }
-    }
-    clear_serial();
-*/
-
-/*
-    // NOTE this is supposed to be a character by character printer
-    int val;
-    char next[2] = " ";
-
-    if (!serial_avail)
-        return;
-    serial_rb[serial_r] = '\0';
-
-    if (serial_rb[0] == 'L') {
-        if (serial_rb[1] == '=') {
-            byte colour = RED;
-            byte font_size = 1;
-
-            int x = 0;
-            int y = 2 * TEXT_LINE_HEIGHT;
-            int16_t bx, by;
-            uint16_t bw, bh;
-
-            for (int i = 2; serial_rb[i] != '\0'; i++) {
-                if (serial_rb[i] == '\r' || serial_rb[i] == '\n') {
-                    tft.fillRect(x, y, SCREEN_WIDTH - x, TEXT_LINE_HEIGHT + 6, BLACK);
-                    x = 0;
-                    y += TEXT_LINE_HEIGHT + 4;
-                } else if (serial_rb[i] == '\x1b' && serial_rb[i + 1] == '[') {
-                    byte type;
-                    i += 2;
-
-                    val = serial_rb[i] - '0';
-                    type = serial_rb[++i];
-                    colour = colours[val];
-                } else if (serial_rb[i] >= 0x20) {
-                    tft.fillRect(x, y, 20, TEXT_LINE_HEIGHT + 6, BLACK);
-                    tft.drawChar(x, y, serial_rb[i], colour, BLACK, font_size);
-                    x += 20;
-
-                    //next[0] = serial_rb[i];
-                    //tft.getTextBounds(next, 0, 0, &bx, &by, &bw, &bh);
-                    //tft.fillRect(x, y, bx + bw, TEXT_LINE_HEIGHT + 6, BLACK);
-                    //x += bx + bw;
-
-                    if (x >= SCREEN_WIDTH && serial_rb[i + 1] != '\r') {
-                        x = 0;
-                        y += TEXT_LINE_HEIGHT + 4;
-                    }
-                }
-            }
-        }
-    }
-    clear_serial();
-*/
-
-
-/*
-    int val;
-
-    if (!serial_avail)
-        return;
-    serial_rb[serial_r] = '\0';
-
-    if (serial_rb[0] == 'L') {
-        if (serial_rb[1] == '=') {
-            word colour = RED;
-            byte font_size = 1;
-            byte text_width = 20;
-            byte text_height = 20;
-            byte screen_width = SCREEN_WIDTH / text_width;
-            byte screen_height = SCREEN_HEIGHT / text_height;
-
-            int x = 0, y = 1;
-            for (int i = 2; serial_rb[i] != '\0'; i++) {
-                if (serial_rb[i] == '\r' || serial_rb[i] == '\n') {
-                    tft.fillRect(x * text_width, y * text_height, screen_width - (x * text_width), text_height, BLACK);
-                    x = 0;
-                    y += 1;
-                } else if (serial_rb[i] == '\x1b' && serial_rb[i + 1] == '[') {
-                    byte type;
-                    i += 2;
-
-                    val = serial_rb[i] - '0';
-                    type = serial_rb[++i];
-                    colour = colours[val];
-                } else if (serial_rb[i] >= 0x20) {
-                    tft.fillRect(x * text_width, y * text_height, text_width, text_height, BLACK);
-                    tft.drawChar(x * text_width, y * text_height, serial_rb[i], colour, BLACK, font_size, font_size);
-                    x += 1;
-                    if (x >= screen_width && serial_rb[i + 1] != '\r') {
-                        x = 0;
-                        y += 1;
-                    }
-                }
-            }
-        }
-    }
-    clear_serial();
-*/
 }
+
 
 /************************
  * Button Debounce Code *
@@ -389,7 +241,9 @@ byte read_buttons()
  * Temperature Sensor *
  **********************/
 
-OneWire oneWire(5);
+#define PIN_TEMP    5
+
+OneWire oneWire(PIN_TEMP);
 DallasTemperature sensors(&oneWire);
 
 void init_temperature()
@@ -405,6 +259,79 @@ void send_temperature()
 	Serial.print('\n');
 }
 
+
+/********************
+ * IR Recevier Code *
+ ********************/
+
+#define PIN_IRRX      6
+
+IRData ir_last;
+
+void init_ir(void)
+{
+    IrReceiver.begin(PIN_IRRX, DISABLE_LED_FEEDBACK);
+}
+
+int read_ir(void)
+{
+    if (!IrReceiver.decode())
+        return 0;
+
+    ir_last = IrReceiver.decodedIRData;
+    IrReceiver.resume();
+
+    if (!(IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT))
+        return 1;
+    else
+        return 0;
+}
+
+void process_ir(void)
+{
+    if (read_ir()) {
+        Serial.print("I0=");
+        Serial.print(get_protocol(ir_last.protocol));
+        Serial.print(':');
+        Serial.print(ir_last.address, HEX);
+        Serial.print(':');
+        Serial.print(ir_last.command, HEX);
+        Serial.print('\n');
+    }
+}
+
+char *get_protocol(decode_type_t protocol)
+{
+    switch (protocol) {
+        case NEC:
+            return "N";
+        case PANASONIC:
+            return "P";
+        case SONY:
+            return "S";
+        case ONKYO:
+            return "O";
+        case JVC:
+            return "J";
+        case SHARP:
+            return "SH";
+        case DENON:
+            return "D";
+        case LG:
+        case LG2:
+            return "L";
+        case RC5:
+            return "RC5";
+        case RC6:
+            return "RC6";
+        case SAMSUNG:
+            return "SA";
+        case APPLE:
+            return "A";
+        default:
+            return "x";
+    }
+}
 
 
 /*********************
@@ -424,6 +351,7 @@ void setup()
 
     init_buttons();
 
+    init_ir();
     init_temperature();
 }
 
@@ -439,18 +367,7 @@ void loop()
     process_buttons();
     process_msg();
 
-    //if (read_ir()) {
-    //    Serial.print("I0=");
-    //    if (ir_repeat)
-    //        Serial.print("-1");
-    //    else {
-    //        //Serial.print((word) ir_code, HEX);
-    //        Serial.print(ir_types[(ir_data.decode_type < 0) ? 0 : ir_data.decode_type]);
-    //        Serial.print(':');
-    //        Serial.print(ir_data.value, HEX);
-    //    }
-    //    Serial.print('\n');
-    //}
+    process_ir();
 
     if (millis() - last_time > 30000) {
         last_time = millis();

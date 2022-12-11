@@ -1,0 +1,6 @@
+ 
+Revision 1 Errata and Notes
+===========================
+
+- the IR receiver pinout has the power pins backwards, which causes the sensor to heat up and die
+
