@@ -20,8 +20,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 
-#include <Adafruit_NeoKey_1x4.h>
-#include <seesaw_neopixel.h>
+#include <Wire.h>
 
 
 #define FONT    OverpassMono14pt7b
@@ -52,8 +51,6 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 const GFXfont *font = &FONT;
 
-Adafruit_NeoKey_1x4 neokey1;
-Adafruit_NeoKey_1x4 neokey2;
 
 
 #define RGB(r, g, b)    ((r) << 11) | ((g) << 5) | (b)
@@ -297,6 +294,10 @@ void process_msg()
  * Button Debounce Code *
  ************************/
 
+#define I2C_GPIO_ADDR    0x26
+
+//Adafruit_MCP23X08 buttons;
+
 #define NUM_BUTTONS    8
 unsigned long button_last = 0;
 unsigned int button_st[NUM_BUTTONS];
@@ -305,6 +306,16 @@ char buttons[NUM_BUTTONS];
 
 void init_buttons()
 {
+    Wire.begin();
+
+    Wire.beginTransmission(I2C_GPIO_ADDR);
+
+    // Set GPPU (Pull-Ups) to On
+    Wire.write(0x06);
+    Wire.write(0xff);
+
+    Wire.endTransmission();
+
     for (int i = 0; i < NUM_BUTTONS; i++) {
         buttons[i] = 0;
         button_ch[i] = 0;
@@ -316,18 +327,7 @@ void debounce_buttons()
 {
     uint8_t button_values;
 
-    button_values = neokey1.read();
-
-    // Rotate the bits so the button order works with the current layout
-    byte output = 0;
-    byte input = neokey2.read();
-    for (byte i = 0; i < 4; i++) {
-        output |= input & 0x01;
-        input >>= 1;
-        output <<= 1;
-    }
-    button_values |= output << 3;
-
+    button_values = read_buttons();
 
     if ((millis() - button_last) < 3)
         return;
@@ -367,6 +367,42 @@ void process_buttons()
     }
 }
 
+byte read_buttons()
+{
+    char buttons;
+
+    // Request read GPIO (Input values)
+    Wire.beginTransmission(I2C_GPIO_ADDR);
+    Wire.write(0x09);
+    Wire.endTransmission();
+
+    // Wait to read data
+    Wire.requestFrom(I2C_GPIO_ADDR, 1);
+
+    while (Wire.available()) {
+        buttons = Wire.read();
+    }
+
+    return ~buttons;
+}
+
+/*
+byte read_buttons()
+{
+    button_values = neokey1.read();
+
+    // Rotate the bits so the button order works with the current layout
+    byte output = 0;
+    byte input = neokey2.read();
+    for (byte i = 0; i < 4; i++) {
+        output |= input & 0x01;
+        input >>= 1;
+        output <<= 1;
+    }
+    button_values |= output << 3;
+}
+*/
+
 /**********************
  * Temperature Sensor *
  **********************/
@@ -404,8 +440,7 @@ void setup()
     tft.setTextSize(1);
     tft.fillScreen(ILI9341_BLACK);
 
-    neokey1.begin(0x30);
-    neokey2.begin(0x31);
+    init_buttons();
 
     init_temperature();
 }
